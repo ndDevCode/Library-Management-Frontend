@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  HttpClient,
-  HttpClientModule,
-  HttpRequest,
-} from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-all-books',
@@ -17,7 +14,7 @@ import { CommonModule } from '@angular/common';
 export class AllBooksComponent implements OnInit {
   private http: any;
   public bookList: any;
-  private selectedBook: any = {};
+  public selectedBook: any = {};
 
   constructor(private httpClient: HttpClient) {
     this.http = httpClient;
@@ -25,6 +22,10 @@ export class AllBooksComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAllBooks();
+  }
+
+  setSelectedBook(book: any) {
+    this.selectedBook = book;
   }
 
   loadAllBooks() {
@@ -36,14 +37,27 @@ export class AllBooksComponent implements OnInit {
 
   deleteBook() {
     let url: string = 'http://localhost:8081/book/' + this.selectedBook.id;
-
     this.http.delete(url).subscribe((res: any) => {
       this.loadAllBooks();
-      this.selectedBook = null;
+      Swal.fire({
+        title: 'Deleted!',
+        text: `${this.selectedBook.title} Deleted!`,
+        icon: 'success',
+      });
+      this.selectedBook = {};
     });
   }
 
-  setSelectedBook(book: any) {
-    this.selectedBook = book;
+  saveBook() {
+    let url: string = 'http://localhost:8081/book/add';
+    this.http.post(url, this.selectedBook).subscribe((res: any) => {
+      this.loadAllBooks();
+      Swal.fire({
+        title: 'Updated!',
+        text: `${this.selectedBook.title} Updated!`,
+        icon: 'success',
+      });
+      this.selectedBook = {};
+    });
   }
 }
