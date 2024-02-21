@@ -1,0 +1,196 @@
+<div class="container margin-top" *ngIf="filteredList">
+  <table class="table">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Borrower ID</th>
+        <th scope="col">Issuer ID</th>
+        <th scope="col">Book ID</th>
+        <th scope="col">Book ISBN</th>
+        <th scope="col">Book Title</th>
+        <th scope="col">Borrowed Time</th>
+        <th scope="col">Return Date</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      <tr *ngFor="let borrower of filteredList">
+        <th scope="row">{{ borrower.id }}</th>
+        <th scope="row">{{ borrower.userId }}</th>
+        <th scope="row">{{ borrower.staffId }}</th>
+        <th scope="row">{{ borrower.bookId }}</th>
+        <th scope="row">{{ borrower.bookIsbn }}</th>
+        <th scope="row">{{ borrower.bookTitle }}</th>
+        <th scope="col">{{ borrower.timestamp }}</th>
+        <th scope="col">{{ borrower.returnDate }}</th>
+        <th scope="col">{{ borrower.status }}</th>
+        <th scope="row">
+          <div class="d-flex flex-wrap gap-1">
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#updateModal"
+              (click)="setUpdatedBorrower(borrower)"
+            >
+              <i class="bi-pencil-square"></i>
+            </button>
+          </div>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Offcanvas Filter Menu -->
+<button
+  class="btn btn-success fixed-top canvas-btn mt-1 rounded-circle"
+  type="button"
+  data-bs-toggle="offcanvas"
+  data-bs-target="#offcanvasWithBothOptions"
+  aria-controls="offcanvasWithBothOptions"
+>
+  <i class="bi bi-funnel"></i>
+</button>
+
+<div
+  class="offcanvas offcanvas-end canvas-margin rounded-3"
+  data-bs-scroll="true"
+  tabindex="-1"
+  id="offcanvasWithBothOptions"
+  aria-labelledby="offcanvasWithBothOptionsLabel"
+>
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
+      Filter Borrowers
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="offcanvas-body">
+    <p>Filter By Status</p>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="flexRadioDefault"
+        id="all"
+        (click)="filterByStatus('ALL')"
+      />
+      <label class="form-check-label" for="all"> All </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="flexRadioDefault"
+        id="borrowed"
+        (click)="filterByStatus('BORROWED')"
+      />
+      <label class="form-check-label" for="borrowed"> Borrowed </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="flexRadioDefault"
+        id="returned"
+        (click)="filterByStatus('RETURNED')"
+      />
+      <label class="form-check-label" for="returned"> Returned </label>
+    </div>
+  </div>
+</div>
+
+<!-- Update Borrower Modal -->
+<div
+  class="modal fade"
+  id="updateModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Update Borrower Status
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Select the status</p>
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          id="select-status"
+          [(ngModel)]="updatedStatus"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <option value="BORROWED" selected>Borrowed</option>
+          <option value="RETURNED">Returned</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="changeStatus()">
+          Update
+        </button>
+        <button
+          #btnModalOpen
+          data-bs-toggle="modal"
+          data-bs-target="#updateConfirmModal"
+          [hidden]="true"
+        ></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Confirm Modal -->
+<div
+  class="modal fade"
+  id="updateConfirmModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">Do you want to update the status?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-dismiss="modal"
+          (click)="updateBorrowStatus()"
+        >
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

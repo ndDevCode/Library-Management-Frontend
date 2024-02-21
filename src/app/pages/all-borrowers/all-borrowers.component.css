@@ -1,0 +1,13 @@
+.canvas-margin {
+  margin-top: 10rem;
+  margin-right: 3rem;
+  width: 20%;
+  height: 30%;
+}
+
+.canvas-btn {
+  top: 6rem;
+  left: 94%;
+  height: 50px;
+  width: 50px;
+}
